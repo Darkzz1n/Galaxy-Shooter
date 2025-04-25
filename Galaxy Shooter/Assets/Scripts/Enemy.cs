@@ -26,13 +26,19 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "Laser")
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
             Destroy(other.gameObject);
         }
 
         if (other.tag == "Player")
         {
-            Destroy(gameObject);
+            Player player = other.transform.GetComponent<Player>();
+
+            if(player != null)
+            {
+                player.Damage();
+            }
+            Destroy(this.gameObject);
         }
     }
 }
