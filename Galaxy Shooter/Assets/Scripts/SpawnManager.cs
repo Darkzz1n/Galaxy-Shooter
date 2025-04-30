@@ -9,13 +9,12 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(SpawnRoutine());
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(SpawnRoutine());
     }
 
     IEnumerator SpawnRoutine()
@@ -23,7 +22,7 @@ public class SpawnManager : MonoBehaviour
         while(1 > 0)
         {
             Instantiate(_enemyPrefab, transform.position + new Vector3(0, 6, 0), Quaternion.identity);
-            yield return new WaitForSeconds(1 * Time.deltaTime);
+            yield return new WaitForSeconds(5);
 
         }
     }
