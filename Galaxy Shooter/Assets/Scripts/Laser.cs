@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class Laser : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class Laser : MonoBehaviour
 
         if(transform.position.y > 8f)
         {
+            if(transform.parent != null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
             Destroy(this.gameObject);
         }
     }
