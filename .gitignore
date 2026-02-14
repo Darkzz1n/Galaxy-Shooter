@@ -65,7 +65,9 @@ sysinfo.txt
 *.unitypackage.meta
 *.app
 [Bb]uild/
+Build/
 [Bb]uilds/
+Builds/
 *.exe
 *.zip
 
