@@ -9,7 +9,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _speed = 4.0f;
 
-    private Player _player;
+    private Player _player_1;
+
+    private Player _player_2;
 
     private Animator _animator;
 
@@ -30,10 +32,16 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
-        if (_player == null)
+        _player_1 = GameObject.Find("Player_1").GetComponent<Player>();
+        if (_player_1 == null)
         {
-            Debug.LogError("Player is NULL");
+            Debug.LogError("Player 1 is NULL");
+        }
+
+        _player_2 = GameObject.Find("Player_2").GetComponent<Player>();
+        if (_player_2 == null)
+        {
+            Debug.LogError("Player 2 is NULL");
         }
 
         _animator = GetComponent<Animator>();
@@ -69,9 +77,13 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            if (_player != null)
+            if (_player_1 != null)
             {
-                _player.AddScore(10);
+                _player_1.AddScore(10);
+            }
+            if (_player_2 != null)
+            {
+                _player_2.AddScore(10);
             }
             _animator.SetTrigger("OnEnemyDeath");
             _speed = 0;

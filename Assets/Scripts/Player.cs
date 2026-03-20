@@ -6,6 +6,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
+    public bool _isPlayerOne;
+    public bool _isPlayerTwo;
+
     [SerializeField]
     private float _speed = 4.0f;
     [SerializeField]
@@ -29,6 +32,8 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private SpawnManager _spawnManager;
 
+    private GameManager _gameManager;
+
     [SerializeField]
     private bool _isTripleShotActivated = false;
     
@@ -47,8 +52,9 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
 
@@ -72,30 +78,32 @@ public class Player : MonoBehaviour
             _audioSource.clip = _laserSoundClip;
         }
 
+        if (_gameManager._isCoopMode == false)
+        {
+            transform.position = new Vector3(0, 0, 0);
+        }
     }
 
     void Update()
     {
-        CalculateMovement();
+        if (_isPlayerOne == true)
+        {
+            PlayerOneMovement();
 
-#if UNITY_ANDROID
-        if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire")) && Time.time > _canFire)
+          if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > _canFire && _isPlayerOne == true)
         {
-            FireLaser();
+            PlayerOneFireLaser();
         }
-        #elif UNITY_IOS
-         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > _canFire)
+        }
+
+        if (_isPlayerTwo == true)
         {
-            FireLaser();
+            PlayerTWoMovement();
+
+          if ((Input.GetKeyDown(KeyCode.Shift) || Input.GetMouseButtonDown(0)) && Time.time > _canFire && _isPlayerTwo == true);
         }
-        #else
-          if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > _canFire)
-        {
-            FireLaser();
-        }
-#endif
     }
-    void CalculateMovement()
+    void PlayerOneMovement()
     {
         float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); // Input.GetAxis("Horizontal");
         float verticalInput = CrossPlatformInputManager.GetAxis("Vertical"); // Input.GetAxis("Vertical");
@@ -115,7 +123,55 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.3f, transform.position.y, 0); ;
         }
     }
-    void FireLaser()
+    void PlayerTwoMovement()
+    {
+        float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); // Input.GetAxis("Horizontal");
+        float verticalInput = CrossPlatformInputManager.GetAxis("Vertical"); // Input.GetAxis("Vertical");
+
+        if (verticalInput.GetKey(KeyCode.J))
+        {
+            transform.Translate(Vector3.left * _speed * Time.deltaTime);
+        }
+         if (verticalInput.GetKey(KeyCode.L))
+        {
+            transform.Translate(Vector3.right * _speed * Time.deltaTime);
+        }
+         if (verticalInput.GetKey(KeyCode.I))
+        {
+            transform.Translate(Vector3.up * _speed * Time.deltaTime);
+        }
+         if (verticalInput.GetKey(KeyCode.K))
+        {
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
+
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
+
+        if (transform.position.x > 11.3f)
+        {
+            transform.position = new Vector3(-11.3f, transform.position.y, 0);
+        }
+        else if (transform.position.x < -11.3f)
+        {
+            transform.position = new Vector3(11.3f, transform.position.y, 0); ;
+        }
+    }
+    void PlayerOneFireLaser()
+    {
+        _canFire = Time.time + _fireRate;
+
+        if (_isTripleShotActivated == true)
+        {
+            Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+        }
+
+        _audioSource.Play();
+    }
+    void PlayerTwoFireLaser()
     {
         _canFire = Time.time + _fireRate;
 

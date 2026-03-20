@@ -7,6 +7,24 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private bool _isGameOver;
+    
+    public bool _isCoopMode;
+
+    void Start()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        if (currentScene.buildIndex == 2)
+        {
+            _isCoopMode = true;
+            Debug.Log("Coop Mode");
+        }
+        else if (currentScene.buildIndex == 1)
+        {
+            _isCoopMode = false;
+            Debug.Log("Single Player");
+        }
+    }
 
     void Update()
     {
