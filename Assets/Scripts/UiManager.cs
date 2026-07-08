@@ -10,15 +10,23 @@ public class UiManager : MonoBehaviour
     [SerializeField]
     private Text _scoreText;
     [SerializeField]
-    private Image _livesImg;
+    private Image _playerOneLivesImg;
     [SerializeField]
-    private Sprite[] _liveSprites;
+    private Image _playerTwoLivesImg;
+    [SerializeField]
+    private Sprite[] _playerOneLiveSprites;
+    [SerializeField]
+    private Sprite[] _playerTwoLiveSprites;
     [SerializeField]
     private Text _gameOverText;
     [SerializeField]
     private Text _restartText;
 
     private GameManager _gameManager;
+
+    private int _playersAlive;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +39,8 @@ public class UiManager : MonoBehaviour
         {
             Debug.LogError("Game Manager está NULL");
         }
+
+        _playersAlive = GameObject.FindGameObjectsWithTag("Player").Length;
     }
 
     public void UpdateScore(int playerScore)
@@ -38,10 +48,24 @@ public class UiManager : MonoBehaviour
         _scoreText.text = "Score: " + playerScore;
     }
 
-    public void UpdateLives(int currentLives)
+    public void UpdateLives(int playerID, int currentLives)
     {
-        _livesImg.sprite = _liveSprites[currentLives];
-        if (currentLives == 0)
+        if (playerID == 1 && _playerOneLivesImg != null)
+        {
+            _playerOneLivesImg.sprite = _playerOneLiveSprites[currentLives];
+        }
+        else if (playerID == 2 && _playerTwoLivesImg != null)
+        {
+            _playerTwoLivesImg.sprite = _playerTwoLiveSprites[currentLives];
+        }
+        
+    }
+
+    public void NotifyPlayerDeath()
+    {
+        _playersAlive--;
+
+        if (_playersAlive <= 0)
         {
             GameOverSequence();
         }
@@ -50,6 +74,18 @@ public class UiManager : MonoBehaviour
     void GameOverSequence()
     {
         _gameManager.GameOver();
+
+        GameObject spawnManager = GameObject.Find("Spawn_Manager");
+        if (spawnManager != null)
+        {
+            spawnManager.GetComponent<SpawnManager>().OnPlayerDeath();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene("Game");
+        }
+
         StartCoroutine(GameOverFlickerRoutine());
         _restartText.gameObject.SetActive(true);
     }

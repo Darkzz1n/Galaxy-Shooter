@@ -92,15 +92,18 @@ public class Player : MonoBehaviour
 
           if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > _canFire && _isPlayerOne == true)
         {
-            PlayerOneFireLaser();
+            FireLaser();
         }
         }
 
         if (_isPlayerTwo == true)
         {
-            PlayerTWoMovement();
+            PlayerTwoMovement();
 
-          if ((Input.GetKeyDown(KeyCode.Shift) || Input.GetMouseButtonDown(0)) && Time.time > _canFire && _isPlayerTwo == true);
+          if (Input.GetKeyDown(KeyCode.RightShift) && Time.time > _canFire && _isPlayerTwo == true)
+            {
+                FireLaser();
+            }
         }
     }
     void PlayerOneMovement()
@@ -125,25 +128,13 @@ public class Player : MonoBehaviour
     }
     void PlayerTwoMovement()
     {
-        float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); // Input.GetAxis("Horizontal");
-        float verticalInput = CrossPlatformInputManager.GetAxis("Vertical"); // Input.GetAxis("Vertical");
 
-        if (verticalInput.GetKey(KeyCode.J))
-        {
-            transform.Translate(Vector3.left * _speed * Time.deltaTime);
-        }
-         if (verticalInput.GetKey(KeyCode.L))
-        {
-            transform.Translate(Vector3.right * _speed * Time.deltaTime);
-        }
-         if (verticalInput.GetKey(KeyCode.I))
-        {
-            transform.Translate(Vector3.up * _speed * Time.deltaTime);
-        }
-         if (verticalInput.GetKey(KeyCode.K))
-        {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        }
+        float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal_2"); // Input.GetAxis("Horizontal");
+        float verticalInput = CrossPlatformInputManager.GetAxis("Vertical_2"); // Input.GetAxis("Vertical");
+
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+
+        transform.Translate(direction * _speed * Time.deltaTime);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -156,7 +147,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.3f, transform.position.y, 0); ;
         }
     }
-    void PlayerOneFireLaser()
+    void FireLaser()
     {
         _canFire = Time.time + _fireRate;
 
@@ -171,22 +162,7 @@ public class Player : MonoBehaviour
 
         _audioSource.Play();
     }
-    void PlayerTwoFireLaser()
-    {
-        _canFire = Time.time + _fireRate;
-
-        if (_isTripleShotActivated == true)
-        {
-            Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
-        }
-
-        _audioSource.Play();
-    }
-
+    
     public void Damage()
     {
         if (_isShieldActivated == true)
@@ -206,15 +182,19 @@ public class Player : MonoBehaviour
             _rightEngine.SetActive(true);
         }
 
-        _uiManager.UpdateLives(_lives);
+        if (_isPlayerOne)
+        {
+            _uiManager.UpdateLives(1, _lives);
+        }
+        else if (_isPlayerTwo)
+        {
+            _uiManager.UpdateLives(2, _lives);
+        }
 
         if (_lives < 1)
         {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                SceneManager.LoadScene("Game");
-            }
-            _spawnManager.OnPlayerDeath();
+            _uiManager.NotifyPlayerDeath();
+
             Destroy(this.gameObject);
         }
     }

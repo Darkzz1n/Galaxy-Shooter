@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028386, g: 0.22571427, b: 0.3069231, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -587,7 +587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isPlayerOne: 1
-  _isPlayerTwo: 0
+  _isPlayerTwo: 1
   _speed: 5
   _speedMultiplier: 2
   _laserPrefab: {fileID: 5791422902100397476, guid: 9d3a816943e2e7943b386fa753fa5362,
@@ -1156,12 +1156,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scoreText: {fileID: 1829208887}
-  _livesImg: {fileID: 63448278}
-  _liveSprites:
+  _playerOneLivesImg: {fileID: 63448278}
+  _playerTwoLivesImg: {fileID: 0}
+  _playerOneLiveSprites:
   - {fileID: 21300000, guid: ba53e111f0125654cabfd4eefaf3a657, type: 3}
   - {fileID: 21300000, guid: 80fba5ece7697c44eacc036539c1b552, type: 3}
   - {fileID: 21300000, guid: 482c8e4c0346b704aa5f1760c3c989d5, type: 3}
   - {fileID: 21300000, guid: 9fe6f40efddf0b64fb68a3382b14a4db, type: 3}
+  _playerTwoLiveSprites: []
   _gameOverText: {fileID: 21751506}
   _restartText: {fileID: 1605150813}
 --- !u!114 &1361831761

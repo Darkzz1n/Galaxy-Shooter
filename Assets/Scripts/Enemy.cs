@@ -32,16 +32,30 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        _player_1 = GameObject.Find("Player_1").GetComponent<Player>();
-        if (_player_1 == null)
+       GameObject playerOne = GameObject.Find("Player_1");
+
+       if(playerOne == null)
         {
-            Debug.LogError("Player 1 is NULL");
+            playerOne = GameObject.Find("Player");
+        }
+        
+        if (playerOne != null)
+        {
+            _player_1 = playerOne.GetComponent<Player>();
+        }
+        else
+        {
+            Debug.LogError("The Player_1 is NULL.");
         }
 
-        _player_2 = GameObject.Find("Player_2").GetComponent<Player>();
-        if (_player_2 == null)
+        GameObject playerTwo = GameObject.Find("Player_2");
+        if (playerTwo != null)
         {
-            Debug.LogError("Player 2 is NULL");
+            _player_2 = playerTwo.GetComponent<Player>();
+        }
+        else
+        {
+            Debug.LogError("The Player_2 is NULL.");
         }
 
         _animator = GetComponent<Animator>();
